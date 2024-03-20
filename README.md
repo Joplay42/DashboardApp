@@ -1,8 +1,9 @@
-# React + Vite
+# My note web application using firebase and react
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Hey!
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Here is my latest project, my personnal note application. It is made bu using react and firebase.
+I wanted to experienced with firebase since I read so many good reviews about the firestore system to use database.
+I create a authentification system using firebase/authentification. You can create an account or sign in with google to see your note, of course each users has its own notes.
+You can store notes in the database, and even edit them after for full user experiences.
+All my code has documentation so don't forget to check it out!
