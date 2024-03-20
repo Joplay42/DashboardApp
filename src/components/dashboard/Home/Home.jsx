@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"; // UseEffect, UseState
-import { db, auth } from "../../config/firebase"; // Firebase Config
+import { db, auth } from "../../../config/firebase"; // Firebase Config
 import { collection, getDocs, query, where, doc } from "firebase/firestore"; // Firestore
 import Note from "./Note"; // Components imports
 
-export default function Home() {
+export default function Home({ index }) {
   const [noteList, setNoteList] = useState([]); // The list of the notes to display them
   const noteCollectionRef = collection(db, "Note"); // Ref of the collection to get the notes on the firebase
   const [user, setUser] = useState(null); // The current user that is logged in
@@ -49,6 +49,22 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching notes:", error); // Error handling
     }
+  };
+
+  const updateNote = (id, updatedTitle, updatedDescription) => {
+    setNoteList((prevNoteList) =>
+      prevNoteList.map((note) =>
+        note.id === id
+          ? { ...note, Title: updatedTitle, Description: updatedDescription }
+          : note
+      )
+    );
+  };
+
+  const deleteNote = (id) => {
+    setNoteList((prevNoteList) =>
+      prevNoteList.filter((note) => note.id !== id)
+    );
   };
 
   //Loading spinner while it loads
@@ -98,9 +114,25 @@ export default function Home() {
       {/** Displaying the noteList in a grid */}
       <div className="my-14">
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-10">
-          {noteList.map((note) => (
-            <Note note={note} />
-          ))}
+          {/** If there arent any note */}
+          {noteList.length == 0 ? (
+            <div className="text-center col-span-3 my-40 space-y-4">
+              <h1 className="text-md text-neutral-600">
+                There is nothing here for the moment.
+              </h1>
+              <button
+                className="bg-red-700 text-white px-6 py-2 hover:bg-red-500"
+                onClick={() => index(1)}
+              >
+                Create
+              </button>
+            </div>
+          ) : (
+            // Maps the notes
+            noteList.map((note) => (
+              <Note note={note} onDelete={deleteNote} onUpdate={updateNote} />
+            ))
+          )}
         </div>
       </div>
     </div>

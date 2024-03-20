@@ -1,8 +1,10 @@
 import { useState } from "react"; // UseState
-import { db, auth } from "../../config/firebase"; // Firebase Configs
+import { db, auth } from "../../../config/firebase"; // Firebase Configs
 import { collection, addDoc } from "firebase/firestore"; // Firestore
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Home() {
+export default function Home({ index }) {
   const [title, setTitle] = useState(""); // The title for the note
   const [description, setDescription] = useState(""); // The description for the note
   const [color, setColor] = useState(""); // The color for the note
@@ -28,6 +30,8 @@ export default function Home() {
           Timestamp: new Date().toLocaleString() + "",
           UserId: userId,
         });
+        toast.success("Note created!");
+        index(0);
       } else {
         console.error("User not authenticated."); // Error handling
       }

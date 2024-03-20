@@ -3,10 +3,10 @@ import { HiOutlineDotsVertical } from "react-icons/hi"; // React Icons
 import { FaRegEdit } from "react-icons/fa"; // React Icons
 import { MdOutlineDeleteForever, MdCancel } from "react-icons/md"; // React Icons
 import { FaCheckCircle } from "react-icons/fa"; // React Icons
-import { updateDoc, deleteDoc, doc } from "firebase/firestore"; // Firestore imports
-import { db } from "../../config/firebase"; // Firebase config
+import { updateDoc, deleteDoc, doc, Timestamp } from "firebase/firestore"; // Firestore imports
+import { db } from "../../../config/firebase"; // Firebase config
 
-export default function Note({ note }) {
+export default function Note({ note, onDelete, onUpdate }) {
   const [menuOpen, setMenuOpen] = useState(false); // State for the menu of the note
   const [edit, setEdit] = useState(false); // State when the user is editing the note
   const [updatedTitle, setUpdatedTitle] = useState(""); // New title for the note
@@ -26,16 +26,18 @@ export default function Note({ note }) {
    *
    * @param {*} id
    */
-  const updateNote = async (id) => {
+  const updateNote = async () => {
     try {
-      const noteDoc = doc(db, "Note", id);
+      const noteDoc = doc(db, "Note", note.id);
       // updating the doc from firebase
       await updateDoc(noteDoc, {
         Title: updatedTitle,
         Description: updatedDescription,
-        Timestamp: new Date().toLocaleString() + "" + " Updated", // Set new timestamp after updated
       });
-      window.location.reload(); // Refresh the page to displays
+      // Call the onUpdate function passed from the Home component to update the note
+      onUpdate(note.id, updatedTitle, updatedDescription);
+      // Close the edit mode
+      setEdit(false);
     } catch (error) {
       console.error(error); // Error handling
     }
@@ -52,7 +54,7 @@ export default function Note({ note }) {
     try {
       const noteDoc = doc(db, "Note", id); // Gets the doc of the note from firebase
       await deleteDoc(noteDoc); // Delete note
-      window.location.reload(); // Refresh to display live
+      onDelete(id);
     } catch (error) {
       console.error(error); // Error handling
     }
